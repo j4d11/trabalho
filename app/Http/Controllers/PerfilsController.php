@@ -11,7 +11,7 @@ class PerfilsController extends Controller
      */
     public function index()
     {
-        //
+        
     }
 
     /**

@@ -10,6 +10,7 @@ class UserPerfil extends Model
     use HasFactory;
     protected $table = "users_perfils";
     protected $fillable = ['user_id', 'perfil_id',];
+    public $timestamps = false;
 
     public function user()
     {

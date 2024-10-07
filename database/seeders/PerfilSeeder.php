@@ -14,11 +14,11 @@ class PerfilSeeder extends Seeder
     public function run(): void
     {
         DB::table('perfils')->insert([
-            'name' => 'Administrador',
-            'name' => 'Gestor',
-            'name' => 'Analista',
-            'created_at' => now(),
-            'updated_at' => now()
+            ['name' => 'Administrador'],
+            ['name' => 'Gestor'],
+            ['name' => 'Analista'],
+            // 'created_at' => now(),
+            // 'updated_at' => now()
         ]);
     }
 }

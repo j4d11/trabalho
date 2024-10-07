@@ -9,15 +9,14 @@ class Users extends Model
 {
     use HasFactory;
     protected $primaryKey = 'id';
-    protected $table = 'usert';
+    protected $table = 'users';
     protected $fillable = [
         'name',
         'email',
-        'perfil_id'
     ];
 
-    public function perfils()
+    public function listPerfil()
     {
-        return $this->hasMany(Perfils::class, 'perfil_id', 'id');
+        return $this->hasMany(UserPerfil::class, 'user_id', 'id');
     }
 }

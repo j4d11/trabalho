@@ -17,7 +17,7 @@ class Perfils extends Model
 
     public function users()
     {
-        return $this->hasMany(Users::class, 'perfil_id', 'id');
+        return $this->belongsTo(Users::class, 'perfil_id', 'id');
     }
 }
 

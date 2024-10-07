@@ -12,8 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users_perfils', function (Blueprint $table) {
-            $table->integer('user_id');
-            $table->integer('perfil_id');
+            $table->id(); // Chave primária para a tabela de relacionamento, se necessário
+            $table->foreignId('user_id')
+                ->constrained('users') // Referencia a tabela 'users'
+                ->onDelete('cascade'); // Apaga em cascata
+            $table->foreignId('perfil_id')
+                ->constrained('perfils') // Referencia a tabela 'perfils'
+                ->onDelete('cascade'); // Apaga em cascata
         });
     }
 
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('users_perfils');
+        Schema::dropIfExists('user_perfil');
     }
 };

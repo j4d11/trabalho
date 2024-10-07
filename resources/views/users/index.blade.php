@@ -21,12 +21,15 @@
         <tbody>
             @forelse($users as $user)
                 <tr>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->email }}</td>
-                    {{-- <td>{{ $user->perfil->name }}</td> --}}
+                    <td>{{ $user?->name }}</td>
+                    <td>{{ $user?->email }}</td>
+
+                    @foreach ($user->listPerfil as $userPerfil)
+                        <td>{{ $userPerfil->perfil->name }}</td>
+                    @endforeach
 
                     <td><a href="{{ route('edit', $user->id) }}">Editar</a></td>
-                    </td>
+
                     <td>
                         <form action="{{ route('destroy', $user->id) }}" method="POST">
                             @csrf
@@ -37,7 +40,7 @@
                 </td>
             @empty
                 <tr>
-                    <td colspan=100>Nenhum produto</td>
+                    <td colspan=100>Nenhum usuário encontrado</td>
                 </tr>
             @endforelse
         </tbody>

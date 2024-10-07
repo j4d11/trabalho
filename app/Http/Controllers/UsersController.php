@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Perfils;
+use App\Models\UserPerfil;
 use App\Models\Users;
 use Illuminate\Http\Request;
 
@@ -13,10 +14,9 @@ class UsersController extends Controller
      */
     public function index()
     {
-        // dd('ola');
-        $users = Users::all();
-        $perfils = Perfils::all();
-        return view('users.index', compact('perfils', 'users'));
+        $users = Users::with('listPerfil.perfil')->get();
+
+        return view('users.index', compact('users'));
     }
 
     /**
@@ -36,9 +36,19 @@ class UsersController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|unique:users,email|email',
+            // 'perfil_id'=> 'required',
         ]);
 
-        Users::create($validated);
+        $user = Users::create($validated);
+
+        //lista
+        $perfil = UserPerfil::create([
+            'user_id' => $user->id,
+            'perfil_id' => $request->perfils,
+        ]);
+
+        $perfil->save();
+
         return redirect('/users');
     }
 
@@ -47,7 +57,9 @@ class UsersController extends Controller
      */
     public function edit($id)
     {
-
+        $user = Users::find($id);
+        $perfils = Perfils::all();
+        return view('users.edit', compact('user', 'perfils'));
     }
 
     /**
@@ -55,7 +67,14 @@ class UsersController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|unique:users,email|email',
+        ]);
+
+        Users::where('id', $id)->update($validated);
+        
+        return redirect('/users');
     }
 
     /**
@@ -63,6 +82,12 @@ class UsersController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        try {
+            $user = Users::findOrFail($id);
+            $user->delete();
+            return redirect('/users');
+        } catch (\Throwable $th) {
+            //throw $th;
+        }
     }
 }

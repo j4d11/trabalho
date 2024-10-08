@@ -20,7 +20,7 @@
         <label for="perfil_id">Perfils:</label>
         <select name="perfil_id" id="perfil_id" required>
             @foreach ($perfils as $perfil)
-                <option value="{{ $perfil->id }}" {{ $user->perfil_id == $perfil->id ? 'selected' : '' }}>{{ $perfil->name }}</option>
+                <option value="{{ $perfil->id }}">{{ $perfil->name }}</option>
             @endforeach
         </select>
 

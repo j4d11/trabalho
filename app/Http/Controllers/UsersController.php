@@ -33,6 +33,7 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|unique:users,email|email',
@@ -73,7 +74,7 @@ class UsersController extends Controller
         ]);
 
         Users::where('id', $id)->update($validated);
-        
+
         return redirect('/users');
     }
 

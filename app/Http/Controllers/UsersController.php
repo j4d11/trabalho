@@ -33,22 +33,29 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request->all());
+        // dd($request->all());
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|unique:users,email|email',
             // 'perfil_id'=> 'required',
+            'perfils'=> 'required|array',
         ]);
 
         $user = Users::create($validated);
 
         //lista
-        $perfil = UserPerfil::create([
-            'user_id' => $user->id,
-            'perfil_id' => $request->perfils,
-        ]);
-
-        $perfil->save();
+        // $perfil = UserPerfil::create([
+        //     'user_id' => $user->id,
+        //     'perfil_id' => $request->perfils,
+        // ]);
+        foreach ($request->perfils as $perfilId) {
+            UserPerfil::create([
+                'user_id' => $user->id,
+                'perfil_id' => $perfilId,
+            ]);
+        }
+    
+        // $perfil->save();
 
         return redirect('/users');
     }

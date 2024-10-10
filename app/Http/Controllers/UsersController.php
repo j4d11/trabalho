@@ -64,11 +64,15 @@ class UsersController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit($id)
-    {
-        $user = Users::find($id);
-        $perfils = Perfils::all();
-        return view('users.edit', compact('user', 'perfils'));
-    }
+{
+    $user = Users::findOrFail($id); 
+    $perfils = Perfils::all(); 
+
+    $userPerfilIds = $user->listPerfil->pluck('perfil_id')->toArray(); 
+
+    return view('users.edit', compact('user', 'perfils', 'userPerfilIds'));
+}
+
 
     /**
      * Update the specified resource in storage.
@@ -77,13 +81,28 @@ class UsersController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|unique:users,email|email',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'perfils' => 'required|array',
         ]);
-
-        Users::where('id', $id)->update($validated);
-
-        return redirect('/users');
+    
+        
+        $user = Users::findOrFail($id);
+        $user->update($validated);
+    
+        
+        UserPerfil::where('user_id', $id)->delete();
+    
+        
+        foreach ($request->perfils as $perfilId) {
+            UserPerfil::create([
+                'user_id' => $user->id,
+                'perfil_id' => $perfilId,
+            ]);
+        }
+    
+        return redirect()->route('index')->with('success', 'Usuário atualizado com sucesso!');
     }
+    
 
     /**
      * Remove the specified resource from storage.
